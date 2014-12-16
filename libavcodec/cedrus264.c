@@ -279,6 +279,8 @@ static av_cold int cedrus264_encode_init(AVCodecContext *avctx)
 	return 0;
 }
 
+#include <time.h>
+
 static int cedrus264_encode(AVCodecContext *avctx, AVPacket *pkt,
                       const AVFrame *frame, int *got_packet)
 {
@@ -344,6 +346,11 @@ static int cedrus264_encode(AVCodecContext *avctx, AVPacket *pkt,
 		*got_packet = 1;
 	}else *got_packet = 0;
 
+	{
+	struct timespec ts;
+	clock_gettime(CLOCK_MONOTONIC, &ts);
+	fprintf(stderr, "cedrus %d frame: %d.%06d\n", size, ts.tv_sec, ts.tv_nsec/1000);
+	}
 	c4->frame_num++;
 
 	return 0;
